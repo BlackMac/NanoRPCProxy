@@ -60,7 +60,7 @@ tracking_db.update('users', n => []).write() //empty db on each new run
 // default vars
 let cache_duration_default: number = 60
 let rpcCache: NodeCache | null = null
-const price_url = 'https://api.coinpaprika.com/v1/tickers/nano-nano'
+let price_url = 'https://api.coinpaprika.com/v1/tickers/nano-nano'
 const mynano_ninja_url = 'https://mynano.ninja/api/accounts/verified'
 //const price_url2 = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=1567'
 //const CMC_API_KEY = 'xxx'
@@ -347,6 +347,9 @@ if (settings.use_cache) {
   rpcCache = new NodeCache( { stdTTL: cache_duration_default, checkperiod: 10 } )
 }
 
+if (settings.price_currencies) {
+  price_url+=`?quotes=${settings.price_currencies.join(",")}`
+}
 // Deduct token count for given token_key
 function useToken(query: ProxyRPCRequest) {
   let token_key = query.token_key
